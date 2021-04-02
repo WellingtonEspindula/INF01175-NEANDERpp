@@ -32,6 +32,7 @@ entity control_unity is
            jmp_cmd, jn_cmd, jz_cmd, hlt_cmd: in STD_LOGIC;
            --output
            sel_mux : out STD_LOGIC;
+           sel_rdm : out STD_LOGIC;
            inc_pc : out STD_LOGIC;
            load_pc	: out STD_LOGIC;	
            load_rem	: out STD_LOGIC;	
@@ -50,22 +51,22 @@ architecture Behavioral of control_unity is
 type t_state is (t0, t1, t2, t3, t4, t5, t6, t7);
 signal current_state, next_state : t_state;
 
+constant ADD_ULA : STD_LOGIC_VECTOR(2 downto 0) := "000";
+constant AND_ULA : STD_LOGIC_VECTOR(2 downto 0) := "001";
+constant OR_ULA  : STD_LOGIC_VECTOR(2 downto 0) := "010";
+constant NOT_ULA : STD_LOGIC_VECTOR(2 downto 0) := "011";
+constant B_ULA   : STD_LOGIC_VECTOR(2 downto 0) := "100";
+constant SUB_ULA : STD_LOGIC_VECTOR(2 downto 0) := "110";
+constant XOR_ULA : STD_LOGIC_VECTOR(2 downto 0) := "111";
+
 
 begin
-
--- 000 ADD
--- 001 AND
--- 010 OR
--- 011 NOT
--- 100 B
--- 101 A
--- 110 SUB
--- 111 XOR
 
 -- FSM
 process(N, Z, nop_cmd, sta_cmd, lda_cmd, add_cmd, sub_cmd, or_cmd, and_cmd, xor_cmd, not_cmd, jmp_cmd, jn_cmd, jz_cmd, hlt_cmd) 
 begin
     sel_mux <= '0';
+    sel_rdm <= '0';
     inc_pc <= '0';
     load_pc	<= '0';
     load_rem <= '0';
@@ -84,9 +85,14 @@ begin
                 sel_mux <= '0';
                 load_rem <= '1';
                 next_state <= t1;
+                load_nz <= '1';
+            elsif (hlt_cmd = '1') then
+                hlt <= '1';
             end if;
         when t1 =>
             inc_pc <= '1';
+            -- load_rem <= '1';
+            load_rdm <= '1';
             next_state <= t2;
             
         when t2 =>
@@ -95,7 +101,7 @@ begin
    
         when t3 =>
             if (not_cmd = '1') then
-                sel_ula <= "011";
+                sel_ula <= NOT_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;
@@ -106,6 +112,7 @@ begin
                 next_state <= t0;
             elsif (hlt_cmd = '1') then
                 hlt <= '1';
+                next_state <= t0;
             else 
                 sel_mux <= '0';
                 load_rem <= '1';
@@ -113,13 +120,16 @@ begin
             end if;
             
         when t4 =>
-            if (sta_cmd = '1' or lda_cmd = '1' or and_cmd = '1' or or_cmd = '1' or add_cmd = '1') then
+            if (sta_cmd = '1' or lda_cmd = '1' or and_cmd = '1' or or_cmd = '1' or xor_cmd = '1'or add_cmd = '1' or sub_cmd = '1') then
                 inc_pc <= '1';
+                load_rdm <= '1';
+            elsif (jmp_cmd = '1' or (jn_cmd = '1' and N = '1') or (jn_cmd = '1' and N = '1')) then
+                load_rdm <= '1';
             end if;
             next_state <= t5;
             
         when t5 =>
-            if (sta_cmd = '1' or lda_cmd = '1' or and_cmd = '1' or or_cmd = '1' or add_cmd = '1') then
+            if (sta_cmd = '1' or lda_cmd = '1' or and_cmd = '1' or or_cmd = '1' or xor_cmd = '1'or add_cmd = '1' or sub_cmd = '1') then
                 sel_mux <= '1';
                 load_rem <= '1';
                 next_state <= t6;
@@ -130,45 +140,49 @@ begin
         
         when t6 =>
             if (sta_cmd = '1') then
+                sel_rdm <= '1';
+                load_rdm <= '1';
+            elsif (lda_cmd = '1' or add_cmd = '1' or sub_cmd = '1' or not_cmd = '1' or and_cmd='1' or or_cmd = '1' or
+                    xor_cmd = '1' or jmp_cmd = '1' or jn_cmd = '1' or jz_cmd = '1') then
                 load_rdm <= '1';
             end if;
-                next_state <= t7;
+            next_state <= t7;
                      
         when t7 =>
             if (sta_cmd = '1') then
                 write_mem <= '1';
             elsif (lda_cmd = '1') then
-                sel_ula <= "100";
+                sel_ula <= B_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;
                 
             elsif (and_cmd = '1') then
-                sel_ula <= "001";
+                sel_ula <= AND_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;
 
             elsif (or_cmd = '1') then
-                sel_ula <= "010";
+                sel_ula <= OR_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;
                 
             elsif (add_cmd = '1') then
-                sel_ula <= "000";
+                sel_ula <= ADD_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;            
             
             elsif (sub_cmd = '1') then
-                sel_ula <= "110";
+                sel_ula <= SUB_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;
                             
             elsif (xor_cmd = '1') then
-                sel_ula <= "111";
+                sel_ula <= XOR_ULA;
                 load_ac <= '1';
                 load_nz <= '1';
                 next_state <= t0;

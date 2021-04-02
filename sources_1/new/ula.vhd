@@ -35,8 +35,6 @@ end ula;
 
 architecture Behavioral of ula is
 
-signal operation_result: STD_LOGIC_VECTOR(width downto 0) := (others => '0');
-
 begin
 
 -- 000 ADD
@@ -44,27 +42,24 @@ begin
 -- 010 OR
 -- 011 NOT
 -- 100 B
--- 101 A
 -- 110 SUB
 -- 111 XOR
 
 process(A, B, operation) begin
 case operation is
-    when "000" => operation_result <= 
-        STD_LOGIC_VECTOR(SIGNED('0' & A) + SIGNED('0' & B));
-    when "001" => operation_result <= '0' & (A AND B);
-    when "010" => operation_result <= '0' & (A OR B);
-    when "011" => operation_result <= '0' & NOT(A);
-    when "100" => operation_result <= '0' & B;
-    when "101" => operation_result <= '0' & A;
-    when "110" => operation_result <= 
-        STD_LOGIC_VECTOR(SIGNED('0' & A) - SIGNED('0' & B));
-    when "111" => operation_result <= '0' & (A XOR B);
-    when others => operation_result <= (others => 'X');
+    when "000" => result <= STD_LOGIC_VECTOR(SIGNED(A) + SIGNED(B));
+    when "001" => result <= (A AND B);
+    when "010" => result <= (A OR B);
+    when "011" => result <= NOT(A);
+    when "100" => result <= B;
+    -- when "101" => result <= A;
+    when "110" => result <= STD_LOGIC_VECTOR(SIGNED(A) - SIGNED(B));
+    when "111" => result <= (A XOR B);
+    when others => result <= (others => 'X');
 end case;
 end process;
 
-result <= operation_result(width-1 downto 0);
-overflow <= operation_result(width);
+-- not implemented
+overflow <= '0';
 
 end Behavioral;

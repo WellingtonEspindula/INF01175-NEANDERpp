@@ -96,6 +96,11 @@ process begin
     A <= "11111111";
     B <= "00000001";
     op <= "110";         -- SUB 
+        
+    wait for clk_period;
+    A <= x"04";
+    B <= x"f0";
+    op <= "110";         -- SUB 
       
     wait for clk_period;
     A <= "00000000";

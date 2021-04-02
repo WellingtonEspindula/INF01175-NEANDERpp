@@ -41,6 +41,7 @@ constant clk_period : time := 20ns;
 
 signal clock, reset: STD_LOGIC;
 --output signals
+signal N, Z : STD_LOGIC;
 signal sel_mux : STD_LOGIC;
 signal inc_pc : STD_LOGIC;
 signal load_pc : STD_LOGIC;
@@ -68,14 +69,16 @@ signal out_ac : STD_LOGIC_VECTOR(7 downto 0);
 signal out_ula : STD_LOGIC_VECTOR(7 downto 0);
 signal overflow_ula : STD_LOGIC;
 
-signal dbg_mem : STD_LOGIC_VECTOR (31 downto 0);
+signal dbg_mem : STD_LOGIC_VECTOR (63 downto 0);
 
 begin
 
 neander_debug : entity work.neander
      Port Map (  clk => clock,
             reset_ext => reset,
-            
+                     
+            dng_N         => N,
+            dbg_Z         => Z,
             dbg_sel_mux   => sel_mux  ,
             dbg_inc_pc    => inc_pc   ,
             dbg_load_pc   => load_pc  ,
@@ -113,61 +116,222 @@ end process;
 
 
 process begin
-    wait for clk_period;
-    sel_mux <= '0';
-    inc_pc <= '0';
-    load_pc	<= '0';
-    load_rem <= '0';
-    write_mem <= '0';
-    load_rdm <= '0';
-    sel_ula <= "000";
-    load_nz <= '0';
-    load_ac <= '0';
-    load_ri <= '0';
-    reset_int <= '0';
-    hlt <= '0';
+--    wait for clk_period;
+--    sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
     
-    -- t0
-    wait for clk_period; 
-    sel_mux <= '0';
-    load_rem <= '1';
-    
-    -- t1
-    wait for clk_period;    
-    inc_pc <= '1';
-    load_rem <= '0';
-    load_rdm <= '1';
-    
-    -- t2
-    wait for clk_period;  
-    inc_pc <= '0';  
-    load_ri <= '1';
-        
-    -- t3
-    wait for clk_period;    
-    sel_mux <= '0';
-    load_rem <= '0';
-        
-    -- t4
-    wait for clk_period;    
-    inc_pc <= '1';
-            
-    -- t5
-    wait for clk_period;    
-    inc_pc <= '0';
-    sel_mux <= '1';
-    load_rem <= '1';            
-   
-    -- t6
-    wait for clk_period;    
-    sel_mux <= '0';
-    load_rem <= '0';  
+--    -- NOP
+--    -- t0
+--    wait for clk_period; 
+--    sel_mux <= '0';
+--    load_rem <= '1';
 
-    -- t7
-    wait for clk_period;
-    sel_ula <= "100";
-    load_ac <= '1';
-    load_nz <= '1';    
+--    -- sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    -- load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+
+    
+--    -- t1
+--    wait for clk_period;    
+--    inc_pc <= '1';
+--    load_rdm <= '1';
+    
+--    sel_mux <= '0';
+--    -- inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    -- load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+    
+--    -- t2
+--    wait for clk_period;  
+--    load_ri <= '1';
+
+--    sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    -- load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+
+--    -- LDA
+--    -- t0
+--    wait for clk_period; 
+--    sel_mux <= '0';
+--    load_rem <= '1';
+
+--    -- sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    -- load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+
+    
+--    -- t1
+--    wait for clk_period;    
+--    inc_pc <= '1';
+--    load_rdm <= '1';
+
+--    sel_mux <= '0';
+--    -- inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    -- load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+
+    
+--    -- t2
+--    wait for clk_period;  
+--    load_ri <= '1';
+
+--    sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    -- load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+    
+        
+--    -- t3
+--    wait for clk_period;    
+--    sel_mux <= '0';
+--    load_rem <= '1';
+
+--    -- sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    -- load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+        
+--    -- t4
+--    wait for clk_period;    
+--    inc_pc <= '1';
+--    load_rdm <= '1';
+
+--    sel_mux <= '0';
+--    -- inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    -- load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+            
+--    -- t5
+--    wait for clk_period;    
+--    sel_mux <= '1';
+--    load_rem <= '1';    
+    
+--    -- sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    -- load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+            
+   
+--    -- t6
+--    wait for clk_period;    
+--    load_rdm <= '1';
+
+--    sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    -- load_rdm <= '0';
+--    sel_ula <= "000";
+--    load_nz <= '0';
+--    load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
+
+--    -- t7
+--    wait for clk_period;
+--    sel_ula <= "100";
+--    load_ac <= '1';
+--    load_nz <= '1';  
+    
+--    sel_mux <= '0';
+--    inc_pc <= '0';
+--    load_pc	<= '0';
+--    load_rem <= '0';
+--    write_mem <= '0';
+--    load_rdm <= '0';
+--    -- sel_ula <= "000";
+--    -- load_nz <= '0';
+--    -- load_ac <= '0';
+--    load_ri <= '0';
+--    reset_int <= '0';
+--    hlt <= '0';
 
     wait;
 end process;

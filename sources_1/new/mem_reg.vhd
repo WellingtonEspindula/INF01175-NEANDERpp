@@ -39,36 +39,43 @@ entity mem_reg is
            data_in : in STD_LOGIC_VECTOR (width-1 downto 0);
            write : in STD_LOGIC;
            data_out : out STD_LOGIC_VECTOR (width-1 downto 0);
-           dbg_mem : out STD_LOGIC_VECTOR ((4*width)-1 downto 0)
+           dbg_mem : out STD_LOGIC_VECTOR ((8*width)-1 downto 0)
            );
 end mem_reg;
 
 architecture Behavioral of mem_reg is
 
 signal mem1_wr, mem2_wr, mem3_wr, mem4_wr : STD_LOGIC;
-signal instr1, instr2, instr3, instr4: STD_LOGIC_VECTOR (width-1 downto 0);
+signal instr1, instr2, instr3, instr4, instr5: STD_LOGIC_VECTOR (width-1 downto 0);
 signal mem1_out, mem2_out, mem3_out, mem4_out : STD_LOGIC_VECTOR (width-1 downto 0);
 
 begin
 
 -- hardcoded instructions
-instr1 <= x"00";
-instr2 <= x"10";
-instr3 <= x"03";
-instr4 <= x"0F";
+instr1 <= x"20";
+instr2 <= x"03";
+instr3 <= x"90";
+instr4 <= x"00";
+instr5 <= x"F4";
 
-mem1_wr <= '1' when (write = '1' and addr = "100") else '0'; 
+-- hardcoded instructions
+-- instr1 <= x"00";
+-- instr2 <= x"20";
+-- instr3 <= x"03";
+-- instr4 <= x"0F";
+
+-- mem1_wr <= '1' when (write = '1' and addr = "100") else '0'; 
 mem2_wr <= '1' when (write = '1' and addr = "101") else '0'; 
 mem3_wr <= '1' when (write = '1' and addr = "110") else '0'; 
 mem4_wr <= '1' when (write = '1' and addr = "111") else '0'; 
 
-memory1 : entity work.reg
-    Generic Map (n => width)
-    Port Map ( clk => clk,
-           reset => reset,
-           lr => mem1_wr,
-           data_in => data_in,
-           data_out => mem1_out);
+-- memory1 : entity work.reg
+--     Generic Map (n => width)
+--     Port Map ( clk => clk,
+--            reset => reset,
+--            lr => mem1_wr,
+--            data_in => data_in,
+--            data_out => mem1_out);
 
 memory2 : entity work.reg
     Generic Map (n => width)
@@ -98,12 +105,15 @@ data_out <= instr1 when addr = "000" else
             instr2 when addr = "001" else 
             instr3 when addr = "010" else 
             instr4 when addr = "011" else 
-            mem1_out when addr = "100" else 
+            instr5 when addr = "100" else 
+            -- mem1_out when addr = "100" else 
             mem2_out when addr = "101" else 
             mem3_out when addr = "110" else 
             mem4_out when addr = "111" else 
             (others => 'X');
 
-dbg_mem <= mem4_out & mem3_out & mem2_out & mem1_out; 
+-- dbg_mem <= mem4_out & mem3_out & mem2_out & mem1_out; 
+-- dbg_mem <= mem4_out & mem3_out & mem2_out & instr5 & instr4 & instr3 & instr2 & instr1; 
+dbg_mem <= instr1 & instr2 & instr3 & instr4 & instr5 & mem2_out & mem3_out & mem4_out; 
 
 end Behavioral;

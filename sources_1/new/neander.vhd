@@ -14,18 +14,20 @@ entity neander is
     Port (  clk : in STD_LOGIC;
             reset_ext : in STD_LOGIC;
             
-            dbg_sel_mux : in STD_LOGIC;
-            dbg_inc_pc : in  STD_LOGIC;
-            dbg_load_pc : in STD_LOGIC;
-            dbg_load_rem : in STD_LOGIC;
-            dbg_write_mem : in STD_LOGIC;
-            dbg_load_rdm : in STD_LOGIC;
-            dbg_sel_ula : in STD_LOGIC_VECTOR(2 downto 0);
-            dbg_load_nz : in STD_LOGIC;
-            dbg_load_ac : in STD_LOGIC;
-            dbg_load_ri : in STD_LOGIC;
-            dbg_reset_int : in STD_LOGIC;
-            dbg_hlt : in STD_LOGIC;
+            dng_N           : out STD_LOGIC;
+            dbg_Z           : out STD_LOGIC;
+            dbg_sel_mux     : out STD_LOGIC;
+            dbg_inc_pc      : out  STD_LOGIC;
+            dbg_load_pc     : out STD_LOGIC;
+            dbg_load_rem    : out STD_LOGIC;
+            dbg_write_mem   : out STD_LOGIC;
+            dbg_load_rdm    : out STD_LOGIC;
+            dbg_sel_ula     : out STD_LOGIC_VECTOR(2 downto 0);
+            dbg_load_nz     : out STD_LOGIC;
+            dbg_load_ac     : out STD_LOGIC;
+            dbg_load_ri     : out STD_LOGIC;
+            dbg_reset_int   : out STD_LOGIC;
+            dbg_hlt         : out STD_LOGIC;
             
             dbg_out_pc : out STD_LOGIC_VECTOR (7 downto 0);
             dbg_out_mux :out  STD_LOGIC_VECTOR(7 downto 0);
@@ -39,7 +41,7 @@ entity neander is
             dbg_out_ac : out STD_LOGIC_VECTOR(7 downto 0); 
             dbg_out_ula :out  STD_LOGIC_VECTOR(7 downto 0);
             
-            dbg_mem : out STD_LOGIC_VECTOR(31 downto 0));
+            dbg_mem : out STD_LOGIC_VECTOR(63 downto 0));
 end neander;
 
 architecture Behavioral of neander is
@@ -85,18 +87,21 @@ signal overflow_ula : STD_LOGIC;
 begin
 
 -- debugging
-sel_mux    <=  dbg_sel_mux  ;  
-inc_pc     <=  dbg_inc_pc   ;  
-load_pc    <=  dbg_load_pc  ;  
-load_rem   <=  dbg_load_rem ;  
-write_mem  <=  dbg_write_mem;  
-load_rdm   <=  dbg_load_rdm ;  
-sel_ula    <=  dbg_sel_ula  ;  
-load_nz    <=  dbg_load_nz  ;  
-load_ac    <=  dbg_load_ac  ;  
-load_ri    <=  dbg_load_ri  ;  
-reset_int  <=  dbg_reset_int;  
-hlt        <=  dbg_hlt      ;  
+            
+dng_N           <=  N;
+dbg_Z           <=  Z;
+dbg_sel_mux     <=  sel_mux    ;
+dbg_inc_pc      <=  inc_pc     ;
+dbg_load_pc     <=  load_pc    ;
+dbg_load_rem    <=  load_rem   ;
+dbg_write_mem   <=  write_mem  ;
+dbg_load_rdm    <=  load_rdm   ;
+dbg_sel_ula     <=  sel_ula    ;
+dbg_load_nz     <=  load_nz    ;
+dbg_load_ac     <=  load_ac    ;
+dbg_load_ri     <=  load_ri    ;
+dbg_reset_int   <=  reset_int  ;
+dbg_hlt         <=  hlt        ;
 
 dbg_out_pc   <= out_pc;
 dbg_out_mux  <= out_mux;
@@ -165,26 +170,27 @@ regNZ_impl : entity work.regNZ
     Port Map ( A => out_ula, cargaNZ => load_nz, clk => clk, reset => reset, out_n => N,
                 out_z => Z);
 
---uc : entity work.control_unity
---    Port Map ( clk => clk,
---           reset => reset_int,
---           --input
---           N => N, Z => Z,
---           nop_cmd => nop_cmd, sta_cmd => sta_cmd, lda_cmd => lda_cmd, add_cmd => add_cmd,
---           sub_cmd => sub_cmd, or_cmd => or_cmd, and_cmd => and_cmd, xor_cmd => xor_cmd, not_cmd  => not_cmd,
---           jmp_cmd => jmp_cmd, jn_cmd => jn_cmd, jz_cmd => jz_cmd, hlt_cmd => hlt_cmd,
---           --output
---           sel_mux => sel_mux,
---           inc_pc => inc_pc,
---           load_pc => load_pc,	
---           load_rem => load_rem,	
---           write_mem => write_mem,	
---           load_rdm => load_rdm,	
---           sel_ula => sel_ula,
---           load_nz => load_nz ,
---           load_ac => load_ac,
---           load_ri => load_ri,
---           reset_registers  => reset_int,
---           hlt => hlt);
+uc : entity work.control_unity
+    Port Map ( clk => clk,
+           reset => reset_int,
+           --input
+           N => N, Z => Z,
+           nop_cmd => nop_cmd, sta_cmd => sta_cmd, lda_cmd => lda_cmd, add_cmd => add_cmd,
+           sub_cmd => sub_cmd, or_cmd => or_cmd, and_cmd => and_cmd, xor_cmd => xor_cmd, not_cmd  => not_cmd,
+           jmp_cmd => jmp_cmd, jn_cmd => jn_cmd, jz_cmd => jz_cmd, hlt_cmd => hlt_cmd,
+           --output
+           sel_mux => sel_mux,
+           sel_rdm => sel_rdm,
+           inc_pc => inc_pc,
+           load_pc => load_pc,	
+           load_rem => load_rem,	
+           write_mem => write_mem,	
+           load_rdm => load_rdm,	
+           sel_ula => sel_ula,
+           load_nz => load_nz ,
+           load_ac => load_ac,
+           load_ri => load_ri,
+           reset_registers  => reset_int,
+           hlt => hlt);
 -- debug outputs
 end Behavioral;
