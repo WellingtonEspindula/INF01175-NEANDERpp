@@ -83,19 +83,15 @@ begin
 
     case current_state is
         when t0 => 
-            if (start = '1') then
-                if (hlt_cmd = '0') then
-                    sel_mux <= '0';
-                    load_rem <= '1';
-                    load_nz <= '1';
-                    next_state <= t1;
-                elsif (hlt_cmd = '1') then
-                    hlt <= '1';
-                end if;
+            if (hlt_cmd = '0' or start = '1') then
+                sel_mux <= '0';
+                load_rem <= '1';
+                next_state <= t1;
+            elsif (hlt_cmd = '1') then
+                hlt <= '1';
             end if;
         when t1 =>
             inc_pc <= '1';
-            -- load_rem <= '1';
             load_rdm <= '1';
             next_state <= t2;
             
@@ -144,7 +140,6 @@ begin
         
         when t6 =>
             if (sta_cmd = '1') then
-                -- sel_rdm <= '1';
                 load_rdm <= '1';
             elsif (lda_cmd = '1' or add_cmd = '1' or sub_cmd = '1' or not_cmd = '1' or and_cmd='1' or or_cmd = '1' or
                     xor_cmd = '1' or jmp_cmd = '1' or jn_cmd = '1' or jz_cmd = '1') then
