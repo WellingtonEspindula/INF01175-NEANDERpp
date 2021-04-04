@@ -1,22 +1,10 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
+-- Company: INF/UFRGS
+-- Author: Wellington Espindula 
+--
 -- Create Date: 26.03.2021 11:30:22
--- Design Name: 
--- Module Name: mux2to1 - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
+-- Project Name: Neander
+-----------------------------------------------------------------------------------
 
 
 library IEEE;

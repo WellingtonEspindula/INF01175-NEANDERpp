@@ -13,6 +13,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity neander is
     Port (  clk : in STD_LOGIC;
             reset_ext : in STD_LOGIC;
+            start : in STD_LOGIC;
             
             dng_N           : out STD_LOGIC;
             dbg_Z           : out STD_LOGIC;
@@ -39,12 +40,22 @@ entity neander is
             dbg_opcode : out STD_LOGIC_VECTOR(3 downto 0); 
             dbg_out_ri : out STD_LOGIC_VECTOR(7 downto 0); 
             dbg_out_ac : out STD_LOGIC_VECTOR(7 downto 0); 
-            dbg_out_ula :out  STD_LOGIC_VECTOR(7 downto 0);
-            
-            dbg_mem : out STD_LOGIC_VECTOR(63 downto 0));
+            dbg_out_ula :out  STD_LOGIC_VECTOR(7 downto 0)
+            );
 end neander;
 
 architecture Behavioral of neander is
+
+COMPONENT blk_mem_gen_0
+  PORT (
+    clka : IN STD_LOGIC;
+    wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+    addra : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    dina : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+  );
+END COMPONENT;
+
 
 signal reset : STD_LOGIC;
 
@@ -60,7 +71,7 @@ signal sel_mux : STD_LOGIC;
 signal inc_pc : STD_LOGIC;
 signal load_pc : STD_LOGIC;
 signal load_rem : STD_LOGIC;
-signal write_mem : STD_LOGIC;
+signal write_mem : STD_LOGIC_VECTOR(0 downto 0);
 signal load_rdm : STD_LOGIC;
 --signal read_mem : STD_LOGIC;
 signal sel_ula : STD_LOGIC_VECTOR(2 downto 0);
@@ -86,15 +97,14 @@ signal overflow_ula : STD_LOGIC;
 
 begin
 
--- debugging
-            
+-- debugging     
 dng_N           <=  N;
 dbg_Z           <=  Z;
 dbg_sel_mux     <=  sel_mux    ;
 dbg_inc_pc      <=  inc_pc     ;
 dbg_load_pc     <=  load_pc    ;
 dbg_load_rem    <=  load_rem   ;
-dbg_write_mem   <=  write_mem  ;
+dbg_write_mem   <=  write_mem(0);
 dbg_load_rdm    <=  load_rdm   ;
 dbg_sel_ula     <=  sel_ula    ;
 dbg_load_nz     <=  load_nz    ;
@@ -124,26 +134,22 @@ pc_impl : entity work.PC
 mux : entity work.mux2to1
     Generic Map (n => 8)
     Port Map (A => out_pc, B => out_rdm, sel => sel_mux, output => out_mux);
-    
-rem_impl : entity work.reg
-    Generic Map (n => 8)
-    Port Map (clk => clk, reset => reset, lr => load_rem, data_in => out_mux, data_out => out_rem);
 
--- memory
-memory : entity work.mem_reg
-    Port Map ( clk => clk,  
-           reset => reset, 
-           addr => out_rem(2 downto 0),
-           data_in => out_rdm, 
-           write => write_mem,
-           data_out => out_mem,
-           dbg_mem => dbg_mem);
+rem_impl : entity work.reg
+   Generic Map (n => 8)
+   Port Map (clk => clk, reset => reset, lr => load_rem, data_in => out_mux, data_out => out_rem);
+
+memory : blk_mem_gen_0
+  PORT MAP (
+    clka => clk,
+    wea => write_mem,
+    addra => out_rem,
+    dina => out_rdm,
+    douta => out_mem
+  );
 
 in_rdm <= out_mem when sel_rdm = '0' else out_ac when sel_rdm = '1' else out_mem;
-
-rdm_impl : entity work.reg
-    Generic Map (n => 8)
-    Port Map (clk => clk, reset => reset, lr => load_rdm, data_in => in_rdm, data_out => out_rdm);
+out_rdm <= in_rdm;
 
 ri_impl : entity work.reg
     Generic Map (n => 8)
@@ -173,6 +179,7 @@ regNZ_impl : entity work.regNZ
 uc : entity work.control_unity
     Port Map ( clk => clk,
            reset => reset_int,
+           start => start,
            --input
            N => N, Z => Z,
            nop_cmd => nop_cmd, sta_cmd => sta_cmd, lda_cmd => lda_cmd, add_cmd => add_cmd,

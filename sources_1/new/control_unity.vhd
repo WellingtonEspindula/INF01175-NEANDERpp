@@ -25,6 +25,8 @@ use IEEE.NUMERIC_STD.ALL;
 entity control_unity is
     Port ( clk : in STD_LOGIC;
            reset : in STD_LOGIC;
+           start : in STD_LOGIC;
+
            --input
            N, Z: in STD_LOGIC;
            nop_cmd, sta_cmd, lda_cmd, add_cmd: in STD_LOGIC;
@@ -36,7 +38,7 @@ entity control_unity is
            inc_pc : out STD_LOGIC;
            load_pc	: out STD_LOGIC;	
            load_rem	: out STD_LOGIC;	
-           write_mem : out STD_LOGIC;	
+           write_mem : out STD_LOGIC_VECTOR(0 downto 0);	
            load_rdm : out STD_LOGIC;	
            sel_ula : out STD_LOGIC_VECTOR (2 downto 0);
            load_nz : out STD_LOGIC;
@@ -70,7 +72,7 @@ begin
     inc_pc <= '0';
     load_pc	<= '0';
     load_rem <= '0';
-    write_mem <= '0';
+    write_mem <= "0";
     load_rdm <= '0';
     sel_ula <= "000";
     load_nz <= '0';
@@ -81,13 +83,15 @@ begin
 
     case current_state is
         when t0 => 
-            if (hlt_cmd = '0') then
-                sel_mux <= '0';
-                load_rem <= '1';
-                next_state <= t1;
-                load_nz <= '1';
-            elsif (hlt_cmd = '1') then
-                hlt <= '1';
+            if (start = '1') then
+                if (hlt_cmd = '0') then
+                    sel_mux <= '0';
+                    load_rem <= '1';
+                    load_nz <= '1';
+                    next_state <= t1;
+                elsif (hlt_cmd = '1') then
+                    hlt <= '1';
+                end if;
             end if;
         when t1 =>
             inc_pc <= '1';
@@ -140,7 +144,7 @@ begin
         
         when t6 =>
             if (sta_cmd = '1') then
-                sel_rdm <= '1';
+                -- sel_rdm <= '1';
                 load_rdm <= '1';
             elsif (lda_cmd = '1' or add_cmd = '1' or sub_cmd = '1' or not_cmd = '1' or and_cmd='1' or or_cmd = '1' or
                     xor_cmd = '1' or jmp_cmd = '1' or jn_cmd = '1' or jz_cmd = '1') then
@@ -150,7 +154,8 @@ begin
                      
         when t7 =>
             if (sta_cmd = '1') then
-                write_mem <= '1';
+                sel_rdm <= '1';
+                write_mem <= "1";
             elsif (lda_cmd = '1') then
                 sel_ula <= B_ULA;
                 load_ac <= '1';
@@ -197,7 +202,6 @@ begin
     end case;
 end process;
 
-
 -- State Reg
 process(clk, reset) begin
     if reset='1' then 
@@ -206,8 +210,5 @@ process(clk, reset) begin
         current_state <= next_state;
     end if;
 end process;
-
-
-
 
 end Behavioral;

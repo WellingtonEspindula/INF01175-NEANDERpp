@@ -3,21 +3,8 @@
 -- Engineering Student: Wellington Espindula 
 -- 
 -- Create Date: 18.03.2021 19:57:23
--- Design Name: 
--- Module Name: ula - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+-- Project Name: Neander
 ----------------------------------------------------------------------------------
-
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
