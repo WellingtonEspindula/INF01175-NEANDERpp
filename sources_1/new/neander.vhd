@@ -47,7 +47,10 @@ end neander;
 
 architecture Behavioral of neander is
 
-COMPONENT blk_mem_gen_0
+--COMPONENT mem_1
+--COMPONENT mem_2
+COMPONENT mem_3
+--COMPONENT mem_4
   PORT (
     clka : IN STD_LOGIC;
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
@@ -139,7 +142,10 @@ rem_impl : entity work.reg
    Generic Map (n => 8)
    Port Map (clk => clk, reset => reset, lr => load_rem, data_in => out_mux, data_out => out_rem);
 
-memory : blk_mem_gen_0
+--memory : mem_1
+--memory : mem_2
+memory : mem_3
+--memory : mem_4
   PORT MAP (
     clka => clk,
     wea => write_mem,

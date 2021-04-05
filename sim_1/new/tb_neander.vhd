@@ -94,16 +94,9 @@ process begin
     reset <= '1';
     wait for clk_period;
     reset <= '0';
-    wait until hlt = '1';
-    start <= '0';
     wait for clk_period;
-    start <= '1';
-    wait until hlt = '1';
     start <= '0';
-    wait for clk_period;
-    start <= '1';
     wait until hlt = '1';
-
     wait;
 end process;
 
