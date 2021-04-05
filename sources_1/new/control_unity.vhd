@@ -92,7 +92,7 @@ begin
             end if;
         when t1 =>
             inc_pc <= '1';
-            load_rdm <= '1';
+            -- load_rdm <= '1';
             next_state <= t2;
             
         when t2 =>
@@ -122,10 +122,10 @@ begin
         when t4 =>
             if (sta_cmd = '1' or lda_cmd = '1' or and_cmd = '1' or or_cmd = '1' or xor_cmd = '1'or add_cmd = '1' or sub_cmd = '1') then
                 inc_pc <= '1';
-                load_rdm <= '1';
-            elsif (jmp_cmd = '1' or (jn_cmd = '1' and N = '1') or (jn_cmd = '1' and N = '1')) then
-                load_rdm <= '1';
-            end if;
+                -- load_rdm <= '1';
+            -- elsif (jmp_cmd = '1' or (jn_cmd = '1' and N = '1') or (jn_cmd = '1' and N = '1')) then
+            --     load_rdm <= '1';
+             end if;
             next_state <= t5;
             
         when t5 =>
@@ -139,12 +139,12 @@ begin
             end if;
         
         when t6 =>
-            if (sta_cmd = '1') then
-                load_rdm <= '1';
-            elsif (lda_cmd = '1' or add_cmd = '1' or sub_cmd = '1' or not_cmd = '1' or and_cmd='1' or or_cmd = '1' or
-                    xor_cmd = '1' or jmp_cmd = '1' or jn_cmd = '1' or jz_cmd = '1') then
-                load_rdm <= '1';
-            end if;
+            -- if (sta_cmd = '1') then
+            --     load_rdm <= '1';
+            -- elsif (lda_cmd = '1' or add_cmd = '1' or sub_cmd = '1' or not_cmd = '1' or and_cmd='1' or or_cmd = '1' or
+            --         xor_cmd = '1' or jmp_cmd = '1' or jn_cmd = '1' or jz_cmd = '1') then
+            --     load_rdm <= '1';
+            -- end if;
             next_state <= t7;
                      
         when t7 =>

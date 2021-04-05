@@ -14,8 +14,9 @@ entity neander is
     Port (  clk : in STD_LOGIC;
             reset_ext : in STD_LOGIC;
             start : in STD_LOGIC;
-            
-            dng_N           : out STD_LOGIC;
+            hlt : out STD_LOGIC;
+
+            dbg_N           : out STD_LOGIC;
             dbg_Z           : out STD_LOGIC;
             dbg_sel_mux     : out STD_LOGIC;
             dbg_inc_pc      : out  STD_LOGIC;
@@ -79,7 +80,7 @@ signal load_nz : STD_LOGIC;
 signal load_ac : STD_LOGIC;
 signal load_ri : STD_LOGIC;
 signal reset_int : STD_LOGIC;
-signal hlt : STD_LOGIC;
+--signal hlt : STD_LOGIC;
 
 -- components inputs and outputs signals
 signal out_pc : STD_LOGIC_VECTOR (7 downto 0);
@@ -98,7 +99,7 @@ signal overflow_ula : STD_LOGIC;
 begin
 
 -- debugging     
-dng_N           <=  N;
+dbg_N           <=  N;
 dbg_Z           <=  Z;
 dbg_sel_mux     <=  sel_mux    ;
 dbg_inc_pc      <=  inc_pc     ;
@@ -111,7 +112,6 @@ dbg_load_nz     <=  load_nz    ;
 dbg_load_ac     <=  load_ac    ;
 dbg_load_ri     <=  load_ri    ;
 dbg_reset_int   <=  reset_int  ;
-dbg_hlt         <=  hlt        ;
 
 dbg_out_pc   <= out_pc;
 dbg_out_mux  <= out_mux;

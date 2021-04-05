@@ -25,7 +25,7 @@ signal load_ri : STD_LOGIC;
 signal reset_int : STD_LOGIC;
 signal hlt : STD_LOGIC;
 
--- components inputs and outputs signals
+---- components inputs and outputs signals
 signal out_pc : STD_LOGIC_VECTOR (7 downto 0);
 signal out_mux : STD_LOGIC_VECTOR(7 downto 0);
 signal out_rem : STD_LOGIC_VECTOR(7 downto 0);
@@ -39,7 +39,7 @@ signal out_ac : STD_LOGIC_VECTOR(7 downto 0);
 signal out_ula : STD_LOGIC_VECTOR(7 downto 0);
 signal overflow_ula : STD_LOGIC;
 
-signal dbg_mem : STD_LOGIC_VECTOR (63 downto 0);
+--signal dbg_mem : STD_LOGIC_VECTOR (63 downto 0);
 
 begin
 
@@ -47,8 +47,9 @@ neander_debug : entity work.neander
      Port Map (  clk => clock,
             reset_ext => reset,
             start => start,
+            hlt => hlt,
                      
-            dng_N         => N,
+            dbg_N         => N,
             dbg_Z         => Z,
             dbg_sel_mux   => sel_mux  ,
             dbg_inc_pc    => inc_pc   ,
@@ -61,7 +62,6 @@ neander_debug : entity work.neander
             dbg_load_ac   => load_ac  ,
             dbg_load_ri   => load_ri  ,
             dbg_reset_int => reset_int,
-            dbg_hlt       => hlt      ,
             
             dbg_out_pc    => out_pc ,
             dbg_out_mux   => out_mux,
