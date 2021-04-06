@@ -29,7 +29,6 @@ entity neander is
             dbg_load_ac     : out STD_LOGIC;
             dbg_load_ri     : out STD_LOGIC;
             dbg_reset_int   : out STD_LOGIC;
-            dbg_hlt         : out STD_LOGIC;
             
             dbg_out_pc : out STD_LOGIC_VECTOR (7 downto 0);
             dbg_out_mux :out  STD_LOGIC_VECTOR(7 downto 0);
@@ -49,8 +48,8 @@ architecture Behavioral of neander is
 
 --COMPONENT mem_1
 --COMPONENT mem_2
-COMPONENT mem_3
---COMPONENT mem_4
+--COMPONENT mem_3
+COMPONENT mem_4
   PORT (
     clka : IN STD_LOGIC;
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
@@ -144,8 +143,8 @@ rem_impl : entity work.reg
 
 --memory : mem_1
 --memory : mem_2
-memory : mem_3
---memory : mem_4
+--memory : mem_3
+memory : mem_4
   PORT MAP (
     clka => clk,
     wea => write_mem,
