@@ -27,11 +27,11 @@ For more details, you can consult the [assingment statement](/blob/master/neande
 |1011*|XOR end|"XOR" operation over the value of the mem's addr "end" to the accumulator value|
 |1111|HLT|Halt|
 
-_\* This operation is not defined in the original Neander's ISA. It means that it's an extensions instruction_
+_\* This operation wasn't defined in the original Neander's ISA. It means that it's an extensions instruction_
 
 ### Neander++ Organization/Microarchitecture
 (WIP)
 
 ## Author
 Wellington Espindula - Main author <br>
-Fernanda Lima Kastensmidt - Digital Systems' Professor
+Fernanda Lima Kastensmidt, Ph.D. - Digital Systems' Professor
