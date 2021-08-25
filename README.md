@@ -1,8 +1,6 @@
-# INF01175-NEANDER
+# INF01175-NEANDER++
 Neander++ (Neander with some extensions) __implementation__ and __testing__ in VHDL for Digital Systems' 2nd assignment. <br>
 [Neander](http://www.inf.ufrgs.br/arq/wiki/doku.php?id=neander) is an one accumulator hypothetical processor architecture created by Professor Raul Weber.
-
-For more details, you can consult the [assingment statement](/blob/master/neander_enunciado.pdf) and the [assignment presentation](/blob/master/Presentation.pdf). Although, both were written in Portuguese.
 
 ### Neander++ ISA
 - 8 bits data and address width
@@ -30,7 +28,17 @@ For more details, you can consult the [assingment statement](/blob/master/neande
 _\* This operation wasn't defined in the original Neander's ISA. It means that it's an extensions instruction_
 
 ### Neander++ Organization/Microarchitecture
-(WIP)
+#### Datapath (Operative Block)
+The schematic of the operative block follows the image below. <br>
+<img src="imgs/schemetic.svg"> <br>
+The datapath main file is [neander.vhd](blob/master/sources_1/new/neander.vhd) which instantied the other components.
+The memory (instruction and data memory) is an instance of a single port BRAM IP. It was generated 4 main memories which represents differents programs written .coe. Those program's assembly are descripted in main directory (neander_[#program].ned).
+
+#### Control Unit (Control Block)
+
+
+For more details, you can consult the [assingment statement](/blob/master/neander_enunciado.pdf) and the [assignment presentation](/blob/master/Presentation.pdf). Although, both were written in Portuguese.
+
 
 ## Author
 Wellington Espindula - Main author <br>
