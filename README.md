@@ -31,7 +31,7 @@ _\* This operation wasn't defined in the original Neander's ISA. It means that i
 #### Datapath (Operative Block)
 The schematic of the operative block follows the image below. <br>
 <img src="imgs/schematic.svg"> <br>
-The datapath main file is [neander.vhd](blob/master/sources_1/new/neander.vhd) which instantied the other components.<br>
+The datapath main file is [neander.vhd](sources_1/new/neander.vhd) which instantied the other components.<br>
 The memory (instruction and data memory) is an instance of a single port BRAM IP. It was generated 4 main memories which represents differents programs written .coe. Those program's assembly are descripted in main directory (neander_[#program].ned).
 
 #### Control Unit (Control Block)
